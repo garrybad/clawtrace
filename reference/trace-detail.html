@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ClawTrace - Trace Detail View</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00E5FF", // Electric Cyan
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#05080F", // Deep Void
+                        "surface": "#0B121E",
+                        "surface-highlight": "#131C2D",
+                        "border": "#1F293A",
+                        "border-glow": "rgba(0, 229, 255, 0.25)",
+                        "text-main": "#E2E8F0",
+                        "text-muted": "#64748B",
+                        "success": "#10B981",
+                        "error": "#F43F5E",
+                        "warning": "#F59E0B",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "sans": ["Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    backgroundImage: {
+                        'grid-pattern': 'radial-gradient(#1F293A 1px, transparent 1px)',
+                    },
+                    boxShadow: {
+                        'glow': '0 0 15px rgba(0, 229, 255, 0.15)',
+                        'glow-sm': '0 0 8px rgba(0, 229, 255, 0.15)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Custom Scrollbar for the dark cyber theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #05080F; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1F293A; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155; 
+        }
+
+        /* Utility for the grid background */
+        .bg-cyber-grid {
+            background-color: #05080F;
+            background-image: radial-gradient(#1F293A 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        /* Tree connector lines */
+        .tree-line {
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background-color: #1F293A;
+        }
+        
+        .tree-branch {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            width: 16px;
+            height: 1px;
+            background-color: #1F293A;
+        }
+
+        /* Blinking cursor for that terminal feel */
+        .cursor-blink {
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body class="bg-background-dark text-text-main h-screen overflow-hidden flex flex-col">
+<!-- Top Navigation Bar (Sticky HUD) -->
+<header class="h-16 border-b border-border bg-background-dark/80 backdrop-blur-md flex items-center justify-between px-6 z-50 shrink-0">
+<div class="flex items-center gap-6">
+<button class="flex items-center gap-2 text-text-muted hover:text-primary transition-colors group">
+<span class="material-symbols-outlined text-xl group-hover:-translate-x-1 transition-transform">arrow_back</span>
+<span class="font-display font-medium text-sm tracking-wide">DASHBOARD</span>
+</button>
+<div class="h-6 w-px bg-border"></div>
+<div class="flex items-center gap-3">
+<div class="p-1.5 rounded bg-primary/10 text-primary border border-border-glow">
+<span class="material-symbols-outlined text-lg">account_tree</span>
+</div>
+<div>
+<h1 class="font-display font-bold text-lg leading-none tracking-tight text-white">Trace Detail View</h1>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="text-[10px] font-mono text-text-muted uppercase tracking-wider">Tx Hash:</span>
+<span class="text-[10px] font-mono text-primary/80">0x7a2...3f9c</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4 flex-1 justify-end max-w-2xl">
+<!-- Search / Filter -->
+<div class="relative group flex-1 max-w-md">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-text-muted group-focus-within:text-primary transition-colors text-lg">filter_list</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-2 bg-surface border border-border rounded-lg text-sm text-white placeholder-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all font-mono shadow-sm" placeholder="Filter by address, method (e.g. swap), or opcodes..." type="text"/>
+<div class="absolute inset-y-0 right-0 pr-2 flex items-center">
+<kbd class="hidden sm:inline-block px-1.5 py-0.5 border border-border rounded text-[10px] font-mono text-text-muted bg-surface-highlight">⌘K</kbd>
+</div>
+</div>
+<!-- View Controls -->
+<div class="flex bg-surface rounded-lg border border-border p-1 gap-1">
+<button class="px-3 py-1.5 rounded text-xs font-medium text-white hover:bg-surface-highlight hover:text-primary transition-colors flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm">unfold_more</span>
+                    Expand All
+                </button>
+<div class="w-px bg-border my-1"></div>
+<button class="px-3 py-1.5 rounded text-xs font-medium text-text-muted hover:bg-surface-highlight hover:text-white transition-colors flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm">unfold_less</span>
+                    Collapse All
+                </button>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 flex overflow-hidden relative">
+<!-- Left Panel: Trace Tree -->
+<div class="flex-1 overflow-y-auto bg-cyber-grid relative">
+<div class="p-6 pb-20 min-w-[800px]">
+<!-- Trace Root -->
+<div class="space-y-1">
+<!-- Row 1: Root Call (Failed) -->
+<div class="group relative flex flex-col">
+<div class="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-surface-highlight/50 border border-transparent hover:border-border transition-all cursor-pointer">
+<!-- Depth & Line -->
+<div class="flex items-center w-8 justify-center">
+<span class="material-symbols-outlined text-text-muted text-sm transform rotate-90">subdirectory_arrow_right</span>
+</div>
+<!-- Content -->
+<div class="flex flex-1 items-center gap-3 font-mono text-sm">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-primary/10 text-primary border border-primary/20">CALL</span>
+<span class="text-text-muted">0xSender</span>
+<span class="material-symbols-outlined text-xs text-text-muted">arrow_forward</span>
+<span class="text-white font-medium hover:underline decoration-primary underline-offset-4 decoration-dotted">0xRouter::swapExactETHForTokens</span>
+<span class="text-text-muted text-xs ml-2">[0.5 ETH]</span>
+</div>
+<!-- Gas & Actions -->
+<div class="flex items-center gap-4 pl-4 border-l border-border/50">
+<div class="flex flex-col items-end gap-0.5 w-24">
+<span class="text-[10px] font-mono text-text-muted">184,202 Gas</span>
+<div class="w-full h-1 bg-surface rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-purple-500 w-[85%]"></div>
+</div>
+</div>
+<button class="p-1 rounded hover:bg-white/5 text-text-muted hover:text-white opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-lg">data_object</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Row 2: Nested Level 1 -->
+<div class="group relative flex flex-col pl-8">
+<!-- Connector Lines (Visual Only) -->
+<div class="absolute left-[19px] top-0 bottom-0 w-px bg-border/50"></div>
+<div class="absolute left-[19px] top-[20px] w-4 h-px bg-border/50"></div>
+<div class="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-surface-highlight/50 border border-transparent hover:border-border transition-all cursor-pointer">
+<div class="flex items-center w-8 justify-center">
+<span class="text-text-muted text-xs font-mono">01</span>
+</div>
+<div class="flex flex-1 items-center gap-3 font-mono text-sm">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-500/10 text-purple-400 border border-purple-500/20">STATIC</span>
+<span class="text-text-muted">0xRouter</span>
+<span class="material-symbols-outlined text-xs text-text-muted">arrow_forward</span>
+<span class="text-white hover:underline decoration-primary underline-offset-4 decoration-dotted">0xFactory::getPair</span>
+</div>
+<!-- Return Value Preview -->
+<div class="text-xs font-mono text-success flex items-center gap-1">
+<span class="material-symbols-outlined text-[10px]">keyboard_return</span>
+<span>(0xPairAddress...)</span>
+</div>
+<div class="flex items-center gap-4 pl-4 border-l border-border/50">
+<div class="flex flex-col items-end gap-0.5 w-24">
+<span class="text-[10px] font-mono text-text-muted">2,400 Gas</span>
+<div class="w-full h-1 bg-surface rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[5%]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Row 3: Nested Level 1 -->
+<div class="group relative flex flex-col pl-8">
+<div class="absolute left-[19px] top-0 bottom-0 w-px bg-border/50"></div>
+<div class="absolute left-[19px] top-[20px] w-4 h-px bg-border/50"></div>
+<div class="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-surface-highlight/50 border border-transparent hover:border-border transition-all cursor-pointer bg-surface/30">
+<div class="flex items-center w-8 justify-center">
+<span class="material-symbols-outlined text-text-muted text-sm transform rotate-90">subdirectory_arrow_right</span>
+</div>
+<div class="flex flex-1 items-center gap-3 font-mono text-sm">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-primary/10 text-primary border border-primary/20">CALL</span>
+<span class="text-text-muted">0xRouter</span>
+<span class="material-symbols-outlined text-xs text-text-muted">arrow_forward</span>
+<span class="text-white hover:underline decoration-primary underline-offset-4 decoration-dotted">0xPair::swap</span>
+</div>
+<div class="flex items-center gap-4 pl-4 border-l border-border/50">
+<div class="flex flex-col items-end gap-0.5 w-24">
+<span class="text-[10px] font-mono text-text-muted">98,100 Gas</span>
+<div class="w-full h-1 bg-surface rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-purple-500 w-[60%]"></div>
+</div>
+</div>
+<button class="p-1 rounded hover:bg-white/5 text-primary opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-lg">data_object</span>
+</button>
+</div>
+</div>
+<!-- Expanded Params Area -->
+<div class="ml-12 mr-4 mt-1 p-3 rounded bg-surface/50 border border-border font-mono text-xs overflow-x-auto relative">
+<!-- Connecting line to parent -->
+<div class="absolute -left-4 top-4 w-4 h-px bg-border/50 border-t border-dotted border-text-muted/30"></div>
+<div class="text-text-muted mb-1 flex justify-between items-center">
+<span>Input Parameters:</span>
+<span class="text-[10px] uppercase tracking-wider text-primary cursor-pointer hover:underline">Decode as Tuple</span>
+</div>
+<pre class="text-text-main"><span class="text-purple-400">amount0Out:</span> <span class="text-primary">0</span>
+<span class="text-purple-400">amount1Out:</span> <span class="text-primary">14509923004812</span>
+<span class="text-purple-400">to:</span> <span class="text-success">"0xSender..."</span>
+<span class="text-purple-400">data:</span> <span class="text-text-muted">0x</span></pre>
+</div>
+</div>
+<!-- Row 4: Nested Level 2 (Log) -->
+<div class="group relative flex flex-col pl-16">
+<div class="absolute left-[19px] top-0 bottom-full w-px bg-border/50"></div> <!-- Parent line extender -->
+<div class="absolute left-[51px] top-0 bottom-0 w-px bg-border/50"></div> <!-- Current level line -->
+<div class="absolute left-[51px] top-[20px] w-4 h-px bg-border/50"></div>
+<div class="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-surface-highlight/50 border border-transparent hover:border-border transition-all cursor-pointer">
+<div class="flex items-center w-8 justify-center">
+<span class="text-text-muted text-xs font-mono">L1</span>
+</div>
+<div class="flex flex-1 items-center gap-3 font-mono text-sm">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-warning/10 text-warning border border-warning/20">EVENT</span>
+<span class="text-warning">Sync</span>
+<span class="text-text-muted text-xs">(reserve0: 10500..., reserve1: 40200...)</span>
+</div>
+</div>
+</div>
+<!-- Row 5: Nested Level 2 (Revert) -->
+<div class="group relative flex flex-col pl-16">
+<div class="absolute left-[51px] top-0 bottom-0 w-px bg-border/50"></div>
+<div class="absolute left-[51px] top-[20px] w-4 h-px bg-border/50"></div>
+<div class="flex items-center gap-3 py-2 px-3 rounded-lg bg-error/5 hover:bg-error/10 border border-error/30 hover:border-error/50 transition-all cursor-pointer shadow-[0_0_10px_rgba(244,63,94,0.1)]">
+<div class="flex items-center w-8 justify-center">
+<span class="material-symbols-outlined text-error text-sm">error</span>
+</div>
+<div class="flex flex-1 items-center gap-3 font-mono text-sm">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-error/10 text-error border border-error/20">CALL</span>
+<span class="text-text-muted">0xPair</span>
+<span class="material-symbols-outlined text-xs text-text-muted">arrow_forward</span>
+<span class="text-error font-bold hover:underline decoration-error underline-offset-4 decoration-dotted">0xToken::transfer</span>
+</div>
+<!-- Error Message -->
+<div class="text-xs font-mono text-error flex items-center gap-1 bg-error/10 px-2 py-0.5 rounded border border-error/20">
+<span class="material-symbols-outlined text-[10px]">warning</span>
+<span>Reverted: TransferHelper::safeTransfer error</span>
+</div>
+<div class="flex items-center gap-4 pl-4 border-l border-error/20">
+<div class="flex flex-col items-end gap-0.5 w-24">
+<span class="text-[10px] font-mono text-error">Gas Limit Hit</span>
+<div class="w-full h-1 bg-surface rounded-full overflow-hidden">
+<div class="h-full bg-error w-[100%]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Row 6: Nested Level 1 (After Revert - sibling) -->
+<div class="group relative flex flex-col pl-8 opacity-50">
+<div class="absolute left-[19px] top-0 bottom-0 w-px bg-border/50"></div>
+<div class="absolute left-[19px] top-[20px] w-4 h-px bg-border/50"></div>
+<div class="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-surface-highlight/50 border border-transparent hover:border-border transition-all cursor-not-allowed">
+<div class="flex items-center w-8 justify-center">
+<span class="text-text-muted text-xs font-mono">03</span>
+</div>
+<div class="flex flex-1 items-center gap-3 font-mono text-sm">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-text-muted/10 text-text-muted border border-text-muted/20">CALL</span>
+<span class="text-text-muted decoration-line-through">0xRouter</span>
+<span class="material-symbols-outlined text-xs text-text-muted">arrow_forward</span>
+<span class="text-text-muted decoration-line-through">0xRefund::refundETH</span>
+</div>
+<div class="px-2 py-0.5 rounded bg-surface border border-border text-[10px] text-text-muted uppercase tracking-wide">
+                                Skipped
+                            </div>
+</div>
+</div>
+</div>
+<!-- Infinite Scroll Loading Indicator -->
+<div class="flex justify-center mt-8 gap-2 items-center text-primary/50 text-xs font-mono animate-pulse">
+<span class="material-symbols-outlined text-sm animate-spin">progress_activity</span>
+                    Indexing remaining 12 calls...
+                </div>
+</div>
+</div>
+<!-- Right Drawer: Details Panel -->
+<aside class="w-[400px] bg-surface border-l border-border flex flex-col shadow-2xl z-20 shrink-0">
+<!-- Drawer Header -->
+<div class="h-14 border-b border-border flex items-center justify-between px-4 bg-surface-highlight/30">
+<h3 class="font-display font-bold text-white text-sm tracking-wide flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+                    Call Trace #4 Details
+                </h3>
+<div class="flex gap-2">
+<button class="p-1.5 hover:bg-white/10 rounded text-text-muted hover:text-white transition-colors">
+<span class="material-symbols-outlined text-lg">open_in_new</span>
+</button>
+<button class="p-1.5 hover:bg-white/10 rounded text-text-muted hover:text-white transition-colors">
+<span class="material-symbols-outlined text-lg">close</span>
+</button>
+</div>
+</div>
+<!-- Drawer Content -->
+<div class="flex-1 overflow-y-auto p-4 space-y-6 font-mono text-sm">
+<!-- Status Block -->
+<div class="p-3 rounded bg-error/10 border border-error/30 text-error flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="text-xs font-bold uppercase tracking-wider">Status</span>
+<span class="flex items-center gap-1 text-xs bg-error/20 px-1.5 py-0.5 rounded"><span class="material-symbols-outlined text-[10px]">error</span> Reverted</span>
+</div>
+<p class="text-xs opacity-90">Execution halted. State changes rolled back.</p>
+</div>
+<!-- Method Info -->
+<div class="space-y-2">
+<label class="text-xs text-text-muted uppercase tracking-wider font-semibold">Method ID</label>
+<div class="flex items-center gap-2">
+<code class="bg-background-dark px-2 py-1.5 rounded border border-border text-primary flex-1">0xa9059cbb</code>
+<span class="text-xs text-text-muted italic">transfer(to, amount)</span>
+</div>
+</div>
+<!-- Calldata -->
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<label class="text-xs text-text-muted uppercase tracking-wider font-semibold">Calldata (Raw)</label>
+<button class="text-[10px] text-primary hover:text-white transition-colors">COPY HEX</button>
+</div>
+<div class="bg-background-dark p-3 rounded border border-border text-xs break-all leading-relaxed text-text-muted selection:bg-primary selection:text-background-dark">
+                        0xa9059cbb0000000000000000000000003f5ce5fbfe3e9af3971dd833d26ba9b5c936f0be000000000000000000000000000000000000000000000d3c21bcecceda100000
+                    </div>
+</div>
+<!-- Decoded Params -->
+<div class="space-y-2">
+<label class="text-xs text-text-muted uppercase tracking-wider font-semibold">Decoded Inputs</label>
+<div class="border border-border rounded overflow-hidden">
+<div class="flex border-b border-border">
+<div class="w-1/3 p-2 bg-surface-highlight text-xs text-text-muted border-r border-border">to</div>
+<div class="w-2/3 p-2 bg-background-dark text-xs text-primary truncate" title="0x3f5ce5fbfe3e9af3971dd833d26ba9b5c936f0be">0x3f5c...f0be</div>
+</div>
+<div class="flex">
+<div class="w-1/3 p-2 bg-surface-highlight text-xs text-text-muted border-r border-border">amount</div>
+<div class="w-2/3 p-2 bg-background-dark text-xs text-primary">1000000000000000000</div>
+</div>
+</div>
+</div>
+<!-- Gas Analysis -->
+<div class="space-y-2">
+<label class="text-xs text-text-muted uppercase tracking-wider font-semibold">Gas Analysis</label>
+<div class="grid grid-cols-2 gap-2">
+<div class="bg-surface-highlight p-2 rounded border border-border">
+<div class="text-[10px] text-text-muted">Gas Used</div>
+<div class="text-white">24,502</div>
+</div>
+<div class="bg-surface-highlight p-2 rounded border border-border">
+<div class="text-[10px] text-text-muted">Limit</div>
+<div class="text-white">500,000</div>
+</div>
+</div>
+<div class="text-[10px] text-text-muted text-right">
+                        Est. Cost: <span class="text-white">0.00012 BNB</span> ($0.04)
+                    </div>
+</div>
+<!-- Opcode Trace Button -->
+<div class="pt-4 border-t border-border">
+<button class="w-full py-2.5 rounded bg-surface hover:bg-surface-highlight border border-border hover:border-primary/50 text-white text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 group">
+<span class="material-symbols-outlined text-sm group-hover:text-primary transition-colors">terminal</span>
+                        View Opcode Trace
+                    </button>
+</div>
+</div>
+</aside>
+</main>
+<!-- Map image description via data-alt -->
+<img class="hidden" data-alt="Abstract cybernetic grid background pattern in deep blue and black" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgL5xTtVZaxNGddy_o4UMuGCkcqibMX6wh0m4Vauqi2GP0cWkGUad492WBjIu3t_C0znn8jnBBmlSDJ5fUMRGBIgdOiVsX5FO1beqxHOC_nmUNi6poytaXRw_EKhwUBsXZ00ZkLIFGRZUmsgFq_ZBfDMwaJTl-TSVMdbHW3FWwhc-PrTJTkYLj3KFBX7SWMcu4Kukp3cQeMs3CWApLoFoLwPkjGOpZgw1QfK7LWhNzZ3ojoUVh2hrOFfASK31gb_prtyifna9lwPM"/>
+</body></html>

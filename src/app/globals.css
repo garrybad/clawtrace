@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+/* ClawTrace design tokens – unified from landing, dashboard, trace-detail */
+:root {
+  --background: #05080f;
+  --foreground: #e2e8f0;
+  /* ClawTrace palette */
+  --primary: #00e5ff;
+  --background-light: #f5f8f8;
+  --background-dark: #05080f;
+  --surface: #0b121e;
+  --surface-highlight: #131c2d;
+  --border: #1f293a;
+  --border-glow: rgba(0, 229, 255, 0.25);
+  --text-main: #e2e8f0;
+  --text-muted: #64748b;
+  --success: #10b981;
+  --error: #f43f5e;
+  --warning: #f59e0b;
+  /* Aliases used in reference HTML */
+  --void: var(--background-dark);
+  --border-dim: var(--border);
+  --text-primary: var(--text-main);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-background-light: var(--background-light);
+  --color-background-dark: var(--background-dark);
+  --color-surface: var(--surface);
+  --color-surface-highlight: var(--surface-highlight);
+  --color-border: var(--border);
+  --color-border-glow: var(--border-glow);
+  --color-text-main: var(--text-main);
+  --color-text-muted: var(--text-muted);
+  --color-success: var(--success);
+  --color-error: var(--error);
+  --color-warning: var(--warning);
+  --color-void: var(--void);
+  --color-border-dim: var(--border-dim);
+  --color-text-primary: var(--text-primary);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  --shadow-glow: 0 0 15px rgba(0, 229, 255, 0.15);
+  --shadow-glow-sm: 0 0 8px rgba(0, 229, 255, 0.15);
+  --shadow-glow-focus: 0 0 0 1px #00e5ff, 0 0 25px rgba(0, 229, 255, 0.25);
+  --shadow-glow-error: 0 0 15px rgba(244, 63, 94, 0.15);
+}
+
+/* Custom scrollbar – cyber theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #05080f;
+}
+::-webkit-scrollbar-thumb {
+  background: #1f293a;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Grid background utility */
+.bg-cyber-grid {
+  background-color: #05080f;
+  background-image: radial-gradient(#1f293a 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Animated grid for landing */
+.bg-grid-animate {
+  background-size: 30px 30px;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+}
+
+@keyframes pulse-grid {
+  0% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+  100% { opacity: 0.4; }
+}
+.animate-pulse-slow {
+  animation: pulse-grid 4s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.cursor-blink {
+  animation: blink 1s step-end infinite;
+}
+
+.typewriter-cursor::after {
+  content: "|";
+  animation: blink 1s step-start infinite;
+}
+
+/* Glass header */
+.glass-header {
+  background: rgba(5, 8, 15, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Dark input autofill */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #0b121e inset !important;
+  -webkit-text-fill-color: white !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+body {
+  font-family: var(--font-inter), sans-serif;
+  background: var(--background);
+  color: var(--foreground);
+}
