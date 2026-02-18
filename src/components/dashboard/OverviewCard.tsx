@@ -1,6 +1,22 @@
 import { ExternalLink, FileText } from "lucide-react";
+import type { TransactionSummary } from "@/lib/trace";
 
-export function OverviewCard() {
+function shortenAddress(addr: string | null | undefined, chars = 4) {
+  if (!addr) return "-";
+  return addr.length > chars * 2 + 2
+    ? `${addr.slice(0, 2 + chars)}...${addr.slice(-chars)}`
+    : addr;
+}
+
+export function OverviewCard({ summary }: { summary: TransactionSummary }) {
+  const fromShort = shortenAddress(summary.from);
+  const toShort = shortenAddress(summary.to);
+  const blockNumber = summary.blockNumber.toLocaleString();
+  const gasUsed = parseInt(summary.gasUsed, 16);
+  const gasLimit = parseInt(summary.gasLimit, 16);
+  const gasPct = gasLimit > 0 ? Math.min(100, (gasUsed / gasLimit) * 100) : 0;
+  const nonce = summary.nonce;
+
   return (
     <div className="bg-surface border border-border-dim rounded-xl overflow-hidden">
       <div className="px-4 py-3 border-b border-border-dim bg-surface-highlight/30 flex justify-between items-center">
@@ -19,7 +35,7 @@ export function OverviewCard() {
               aria-hidden
             />
             <span className="font-mono text-primary text-sm truncate">
-              0x9f8...a2b1
+              {fromShort}
             </span>
             <ExternalLink className="size-3.5 text-text-muted opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
@@ -33,12 +49,12 @@ export function OverviewCard() {
               <FileText className="size-3.5" />
             </div>
             <span className="font-mono text-primary text-sm truncate">
-              PancakeSwap V3: Router
+              {toShort}
             </span>
             <ExternalLink className="size-3.5 text-text-muted opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
           <div className="mt-1 font-mono text-xs text-text-muted pl-8">
-            0x13f...99c2
+            {summary.to ?? "-"}
           </div>
         </div>
         <div className="h-px bg-border-dim" />
@@ -47,8 +63,10 @@ export function OverviewCard() {
             Value
           </span>
           <div className="font-mono text-white text-sm">
-            0.5 <span className="text-text-muted">BNB</span>
-            <span className="text-xs text-text-muted ml-1">($123.45)</span>
+            {summary.value === "0x0"
+              ? "0"
+              : parseInt(summary.value, 16).toString()}{" "}
+            <span className="text-text-muted">wei</span>
           </div>
         </div>
         <div>
@@ -56,24 +74,34 @@ export function OverviewCard() {
             Gas Used
           </span>
           <div className="font-mono text-white text-sm">
-            145,200 <span className="text-text-muted text-xs">(68.2%)</span>
+            {gasUsed.toLocaleString()}{" "}
+            <span className="text-text-muted text-xs">
+              ({gasPct.toFixed(1)}%)
+            </span>
           </div>
           <div className="w-full h-1.5 bg-surface-highlight rounded-full mt-2 overflow-hidden">
             <div
               className="h-full bg-warning w-[68%]"
-              style={{ boxShadow: "0 0 8px rgba(245, 158, 11, 0.4)" }}
+              style={{
+                width: `${gasPct}%`,
+                boxShadow: "0 0 8px rgba(245, 158, 11, 0.4)",
+              }}
             />
           </div>
           <div className="flex justify-between mt-1">
-            <span className="text-[10px] text-text-muted">Limit: 212,874</span>
-            <span className="text-[10px] text-error font-medium">High Usage</span>
+            <span className="text-[10px] text-text-muted">
+              Limit: {gasLimit.toLocaleString()}
+            </span>
+            <span className="text-[10px] text-error font-medium">
+              {gasPct > 80 ? "High Usage" : "Normal"}
+            </span>
           </div>
         </div>
         <div>
           <span className="text-xs font-semibold text-text-muted uppercase tracking-wider block mb-1">
             Nonce
           </span>
-          <div className="font-mono text-text-muted text-sm">42</div>
+          <div className="font-mono text-text-muted text-sm">{nonce}</div>
         </div>
       </div>
     </div>
