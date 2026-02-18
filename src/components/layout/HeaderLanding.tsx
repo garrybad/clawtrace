@@ -3,7 +3,7 @@ import { Bug } from "lucide-react";
 
 export function HeaderLanding() {
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 lg:px-10 border-b border-white/5 bg-background-dark/80 backdrop-blur-md">
+    <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 lg:px-10 border-b border-white/5 bg-background-dark/80 backdrop-blur-md max-w-[1600px] mx-auto">
       <div className="flex items-center gap-3">
         <div className="flex items-center justify-center size-8 rounded-lg bg-surface border border-border text-primary shadow-glow">
           <Bug className="size-5" />
@@ -13,19 +13,21 @@ export function HeaderLanding() {
         </span>
       </div>
       <div className="flex items-center gap-6">
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="flex items-center gap-6">
           <Link
-            href="#"
+            href="https://github.com/garrybad/clawtrace"
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-sm font-medium text-text-muted hover:text-primary transition-colors"
           >
-            Documentation
+            Github
           </Link>
-          <Link
+          {/* <Link
             href="#"
             className="text-sm font-medium text-text-muted hover:text-primary transition-colors"
           >
             API
-          </Link>
+          </Link> */}
         </nav>
       </div>
     </header>

@@ -656,7 +656,7 @@ export function TraceTreePanel({
   const maxDepth = metadata.maxDepth + 1;
 
   return (
-    <div className="bg-surface border border-border-dim rounded-xl flex flex-col h-full overflow-hidden shadow-lg">
+    <div className="bg-surface border border-border-dim rounded-xl flex flex-col overflow-hidden shadow-lg min-h-[500px]">
       <div className="px-4 py-3 border-b border-border-dim bg-surface-highlight/30 flex justify-between items-center sticky top-0 z-20 backdrop-blur-md">
         <div className="flex items-center gap-3">
           <h3 className="font-display font-semibold text-sm tracking-wide text-white">

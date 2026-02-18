@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Terminal, Search } from "lucide-react";
+import { Terminal, Search, Bug } from "lucide-react";
 
 export function HeaderDashboard({ txHash = "0x7a250d5630b4cf539739df2c5dacb4c659f2488d78f795f723d5745116523f9" }: { txHash?: string }) {
   return (
@@ -9,13 +9,13 @@ export function HeaderDashboard({ txHash = "0x7a250d5630b4cf539739df2c5dacb4c659
       <div className="max-w-[1600px] mx-auto px-6 h-16 flex items-center justify-between gap-8">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shadow-glow">
-            <Terminal className="size-5" />
+            <Bug className="size-5" />
           </div>
           <Link href="/" className="font-display font-bold text-xl tracking-tight text-white hover:text-primary transition-colors">
             ClawTrace
           </Link>
         </div>
-        <div className="flex-1 max-w-2xl">
+        {/* <div className="flex-1 max-w-2xl">
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-primary">
               <Search className="size-5" />
@@ -32,7 +32,7 @@ export function HeaderDashboard({ txHash = "0x7a250d5630b4cf539739df2c5dacb4c659
               </span>
             </div>
           </div>
-        </div>
+        </div> */}
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border-dim bg-surface">
             <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />

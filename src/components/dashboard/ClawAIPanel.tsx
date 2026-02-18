@@ -39,7 +39,7 @@ export function ClawAIPanel({ hash, status }: Props) {
   };
 
   return (
-    <div className="bg-surface border border-border-dim rounded-xl overflow-hidden flex flex-col h-full shadow-glow">
+    <div className="bg-surface border border-border-dim rounded-xl overflow-hidden flex flex-col shadow-glow">
       <div className="px-4 py-3 border-b border-border-dim bg-surface-highlight/30 flex justify-between items-center">
         <div className="flex items-center gap-2 text-primary">
           <Sparkles className="size-[18px]" />

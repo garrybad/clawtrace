@@ -1,7 +1,7 @@
 import { HeaderLanding } from "@/components/layout/HeaderLanding";
 import { HeroInput } from "@/components/landing/HeroInput";
 import { RecentSearches } from "@/components/landing/RecentSearches";
-import { Wrench } from "lucide-react";
+import { Bug, Wrench } from "lucide-react";
 
 export default function Home() {
   return (
@@ -18,7 +18,7 @@ export default function Home() {
             <div className="inline-flex items-center justify-center mb-6">
               <div className="relative">
                 <div className="absolute inset-0 bg-primary blur-[20px] opacity-20 rounded-full" />
-                <Wrench className="size-14 text-primary relative z-10 drop-shadow-[0_0_15px_rgba(0,229,255,0.5)]" />
+                <Bug className="size-14 text-primary relative z-10 drop-shadow-[0_0_15px_rgba(0,229,255,0.5)]" />
               </div>
             </div>
             <h1 className="text-5xl md:text-6xl font-display font-bold text-white tracking-[-0.02em] mb-3 drop-shadow-lg">
@@ -34,7 +34,7 @@ export default function Home() {
         </div>
         <div className="absolute bottom-6 left-0 right-0 text-center pointer-events-none">
           <p className="text-xs text-text-muted/40 font-mono">
-            v1.0.4 • Powered by ClawAI Engine
+            v1.0.0 • Built for GoodVibes Hackathon
           </p>
         </div>
       </main>

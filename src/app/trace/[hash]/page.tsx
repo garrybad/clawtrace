@@ -37,8 +37,8 @@ export default async function TraceDashboardPage({ params }: PageProps) {
                 <AlertTriangle className="size-3.5" />
                 {data.transaction.summary.status === "success" ? "Success" : "Reverted"}
               </span>
-              <h2 className="font-mono text-xl md:text-2xl text-white tracking-tight">
-                {txShort}
+              <h2 className="font-mono text-xl md:text-2xl text-white tracking-tight truncate">
+                {hash}
               </h2>
               <button
                 type="button"
@@ -69,7 +69,7 @@ export default async function TraceDashboardPage({ params }: PageProps) {
               </span>
             </div>
           </div>
-          <div className="flex gap-3">
+          {/* <div className="flex gap-3">
             <button
               type="button"
               className="px-4 py-2 rounded-lg border border-border-dim bg-surface hover:bg-surface-highlight text-sm font-medium text-text-main transition-colors flex items-center gap-2"
@@ -84,14 +84,14 @@ export default async function TraceDashboardPage({ params }: PageProps) {
               <Bug className="size-5" />
               Debug
             </Link>
-          </div>
+          </div> */}
         </section>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full min-h-[600px]">
           <div className="lg:col-span-3 flex flex-col gap-4">
             <OverviewCard summary={data.transaction.summary} />
           </div>
-          <div className="lg:col-span-6 flex flex-col h-full min-h-[500px]">
+          <div className={`${data.transaction.summary.status !== "success" ? "lg:col-span-6" : "lg:col-span-9"} flex flex-col h-full min-h-[500px]`}>
             <TraceTreePanel
               hash={hash}
               roots={[]}
@@ -100,13 +100,14 @@ export default async function TraceDashboardPage({ params }: PageProps) {
               tenderlyTrace={data.trace}
             />
           </div>
-          <div className="lg:col-span-3 flex flex-col gap-4">
-            <ClawAIPanel
-              hash={hash}
-              status={data.transaction.summary.status}
-            />
-            <SimulationCard />
-          </div>
+          {data.transaction.summary.status !== "success" && (
+            <div className="lg:col-span-3 flex flex-col gap-4">
+              <ClawAIPanel
+                hash={hash}
+                status={data.transaction.summary.status}
+              />
+            </div>
+          )}
         </div>
       </main>
     </>

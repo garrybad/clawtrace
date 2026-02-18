@@ -3,16 +3,14 @@
 import Link from "next/link";
 
 const recentItems = [
-  { hash: "0x3a...9f2", path: "0x7a250d5630b4cf539739df2c5dacb4c659f2488d78f795f723d5745116523f9" },
-  { hash: "0x88e...1c4", path: "0x88e1c4" },
-  { hash: "0x90a...d3e", path: "0x90ad3e" },
+  { hash: "0xb5...75d", path: "0xb5414a6f587b43ea43e8173521cf10d9182dbc2c1c0e504188eaeb4e6ed7a75d" },
 ] as const;
 
 export function RecentSearches() {
   return (
     <div className="w-full mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 animate-[fadeIn_0.8s_ease-out]">
       <span className="text-xs uppercase tracking-wider text-text-muted font-bold opacity-60">
-        Recent:
+        Example:
       </span>
       <div className="flex flex-wrap justify-center gap-2">
         {recentItems.map((item) => (
