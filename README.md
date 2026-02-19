@@ -227,16 +227,15 @@ Verified on [testnet.bscscan.com](https://testnet.bscscan.com).
 
 ### Demo
 
-- **Live demo**: [Add Vercel/deploy URL]
+- **Live demo**: [Clawtrace](https://clawtrace.vercel.app/)
 - **Sample failing tx**: Run `./contracts/scripts/test-flashloan-onchain.sh` to get tx hashes.
 
 ---
 
 ## 🎥 Demo Assets
 
-- **Live Demo URL**: [Add URL]
-- **Video Demo**: [Add YouTube link]
-- **Pitch Deck**: [Add link]
+- **Live Demo URL**: [Clawtrace](https://clawtrace.vercel.app/)
+- **Video Demo**: [Youtube](https://youtu.be/Fd5Gd1eYvGA)
 - **AI Build Log**: [AI_BUILD_LOG.md](AI_BUILD_LOG.md) – how AI (Cursor + Claude) was used to build ClawTrace
 
 ---
