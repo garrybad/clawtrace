@@ -48,7 +48,7 @@ export function findFailure(
     decodedReason: decoded?.reason,
     errorKind: decoded?.kind || "UNKNOWN",
     panicCode: decoded?.panicCode
-      ? `0x${decoded.panicCode.toString(16)}`
+      ? `0x${Number(decoded.panicCode).toString(16)}`
       : undefined,
     customErrorSelector: decoded?.customErrorSelector,
     customErrorName: decoded?.customErrorName,

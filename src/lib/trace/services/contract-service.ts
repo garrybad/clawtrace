@@ -62,7 +62,7 @@ export async function getContractData(address: string): Promise<ContractData> {
       // Update ABI
       if (abiResult) {
         abi = abiResult;
-        abiCache.set(`abi:${normalizedAddr}`, abi);
+        abiCache.set(`abi:${normalizedAddr}`, Array.from(abi));
       }
 
       // Update source code and metadata
@@ -74,7 +74,7 @@ export async function getContractData(address: string): Promise<ContractData> {
         runs = sourceResult.Runs;
         evmVersion = sourceResult.EVMVersion;
         licenseType = sourceResult.LicenseType;
-        isProxy = sourceResult.Proxy === "1";
+        isProxy = sourceResult.Proxy ? "1" : "0";
         implementation = sourceResult.Implementation;
 
         if (sourceCode) {
@@ -93,7 +93,7 @@ export async function getContractData(address: string): Promise<ContractData> {
         runs = sourceResult.Runs;
         evmVersion = sourceResult.EVMVersion;
         licenseType = sourceResult.LicenseType;
-        isProxy = sourceResult.Proxy === "1";
+        isProxy = sourceResult.Proxy ? "1" : "0";
         implementation = sourceResult.Implementation;
       }
     }
@@ -109,7 +109,7 @@ export async function getContractData(address: string): Promise<ContractData> {
     runs,
     evmVersion,
     licenseType,
-    isProxy: isProxy === true,
+    isProxy: isProxy ? isProxy === "1" : false,
     implementation,
   };
 }

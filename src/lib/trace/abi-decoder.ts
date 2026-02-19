@@ -25,7 +25,7 @@ export function decodeFunctionCall(
 
     return {
       name: decoded.functionName,
-      args: decoded.args || [],
+      args: Array.isArray(decoded.args) ? decoded.args : [],
       signature: `${decoded.functionName}(${decoded.args?.map(() => "?").join(",") || ""})`,
     };
   } catch (error) {
