@@ -5,7 +5,7 @@
 set -e
 
 BORROWER="0xC9E8e68de7ECBFe54C573003e09B945DD7A42018"
-RPC="${BSC_TESTNET_URL:-https://bsc-testnet.4everland.org/v1/1da45bd8c7fef7f1c59ebaf4ef5bfea0}"
+RPC="${BSC_TESTNET_URL:-https://bsc-testnet-rpc.publicnode.com}"
 
 # Load .env from contracts/ or parent
 if [ -f .env ]; then

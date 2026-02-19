@@ -1,6 +1,6 @@
 # ClawTrace – AI-Powered Transaction Debugger for BNB Chain
 
-ClawTrace turns BNB Chain transaction debugging into a one-step flow: paste a tx hash, get a Tenderly-style execution trace plus AI root cause analysis in seconds. The project targets the **Builders** track at [Good Vibes Only: OpenClaw Edition](https://dorahacks.io).
+ClawTrace turns BNB Chain transaction debugging into a one-step flow: paste a tx hash, get a Tenderly-style execution trace plus AI root cause analysis in seconds. The project targets the **Builders** track at [Good Vibes Only: OpenClaw Edition](https://dorahacks.io). See [AI_BUILD_LOG.md](AI_BUILD_LOG.md) for how AI was used in development.
 
 ---
 
@@ -124,7 +124,8 @@ clawtrace/
 │   ├── script/
 │   ├── scripts/                  # test-flashloan-onchain.sh
 │   └── README.md
-├── .env
+├── .env.example
+├── AI_BUILD_LOG.md               # AI usage log (Cursor + Claude)
 └── README.md
 ```
 
@@ -236,6 +237,7 @@ Verified on [testnet.bscscan.com](https://testnet.bscscan.com).
 - **Live Demo URL**: [Add URL]
 - **Video Demo**: [Add YouTube link]
 - **Pitch Deck**: [Add link]
+- **AI Build Log**: [AI_BUILD_LOG.md](AI_BUILD_LOG.md) – how AI (Cursor + Claude) was used to build ClawTrace
 
 ---
 
