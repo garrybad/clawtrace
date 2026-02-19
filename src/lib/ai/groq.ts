@@ -5,7 +5,7 @@
 import Groq from "groq-sdk";
 import type { AIInsight } from "./types";
 
-const MODEL = "llama-3.3-70b-versatile";
+const MODEL = "openai/gpt-oss-120b";
 const TIMEOUT_MS = 30_000;
 
 function getClient(): Groq | null {
